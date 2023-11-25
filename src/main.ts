@@ -4,6 +4,8 @@ import { App } from './app';
 import { TYPES } from './types';
 import { ILoggerService } from './logger/logger.service.interface';
 import { LoggerService } from './logger/logger.service';
+import { ITasksController } from './tasks/tasks.controller.interface';
+import { TasksController } from './tasks/tasks.controller';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -11,8 +13,9 @@ export interface IBootstrapReturn {
 }
 
 const containerBindings = new ContainerModule((bind: interfaces.Bind) => {
-	bind<App>(TYPES.Application).to(App);
-	bind<ILoggerService>(TYPES.LoggerService).to(LoggerService);
+	bind<App>(TYPES.Application).to(App).inSingletonScope();
+	bind<ILoggerService>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
+	bind<ITasksController>(TYPES.TasksController).to(TasksController).inSingletonScope();
 });
 
 async function bootstrap(): Promise<IBootstrapReturn> {
