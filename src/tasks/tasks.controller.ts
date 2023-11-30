@@ -5,10 +5,16 @@ import { ILoggerService } from '../logger/logger.service.interface';
 import { BaseController } from '../common/base.controller';
 import { ITasksController } from './tasks.controller.interface';
 import { NextFunction, Request, Response } from 'express';
+import { ITasksService } from './tasks.service.interface';
+import { HTTPError } from '../errors/http-error.class';
+import { TasksCreateDto } from './dto/tasks-create.dto';
 
 @injectable()
 export class TasksController extends BaseController implements ITasksController {
-	constructor(@inject(TYPES.LoggerService) private loggerService: ILoggerService) {
+	constructor(
+		@inject(TYPES.LoggerService) private loggerService: ILoggerService,
+		@inject(TYPES.TasksService) private taskService: ITasksService,
+	) {
 		super(loggerService);
 		this.bindRoutes([
 			{
@@ -38,7 +44,20 @@ export class TasksController extends BaseController implements ITasksController 
 		]);
 	}
 
-	async create(req: Request, res: Response, next: NextFunction): Promise<void> {}
+	async create(
+		{ body }: Request<{}, {}, TasksCreateDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const result = await this.taskService.createTask({
+			name: body.name,
+			description: body.description,
+		});
+		if (!result) {
+			return next(new HTTPError(422, 'This task has already been created'));
+		}
+		this.ok(res, { name: result.name, description: result.description });
+	}
 	async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {}
 	async getById(req: Request, res: Response, next: NextFunction): Promise<void> {}
 	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {}

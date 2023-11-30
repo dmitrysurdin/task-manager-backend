@@ -6,6 +6,7 @@ import { json } from 'body-parser';
 import { TYPES } from './types';
 import { ILoggerService } from './logger/logger.service.interface';
 import { TasksController } from './tasks/tasks.controller';
+import { MongoService } from './database/mongo.service';
 
 @injectable()
 export class App {
@@ -15,6 +16,7 @@ export class App {
 	constructor(
 		@inject(TYPES.LoggerService) private loggerService: ILoggerService,
 		@inject(TYPES.TasksController) private tasksController: TasksController,
+		@inject(TYPES.MongoService) private mongoService: MongoService,
 	) {
 		this.app = express();
 		this.server = new Server();
@@ -32,7 +34,12 @@ export class App {
 	public async init(): Promise<void> {
 		this.useMiddleware();
 		this.useRoutes();
+		await this.mongoService.connect();
 		this.server = this.app.listen(this.port);
 		this.loggerService.log(`Server is running on http://localhost:${this.port}`);
+	}
+
+	public close(): void {
+		this.server.close();
 	}
 }
