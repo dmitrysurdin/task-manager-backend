@@ -7,7 +7,7 @@ import { TYPES } from '../types';
 export class MongoService {
 	DB_URL: string;
 	constructor(@inject(TYPES.LoggerService) private logger: ILoggerService) {
-		this.DB_URL = `mongodb+srv://dimasurdin70:EqtzW5PLxeHCxgrz@cluster.vnptkyc.mongodb.net/?retryWrites=true&w=majority`;
+		this.DB_URL = `mongodb+srv://user:user@cluster.vnptkyc.mongodb.net/?retryWrites=true&w=majority`;
 	}
 	public async connect(): Promise<void> {
 		try {
