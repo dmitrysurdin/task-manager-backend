@@ -4,6 +4,7 @@ import { App } from './app';
 import { TYPES } from './types';
 import { ILoggerService } from './logger/logger.service.interface';
 import { LoggerService } from './logger/logger.service';
+import { ExceptionFilter } from './errors/exception.filter';
 import { ITasksController } from './tasks/tasks.controller.interface';
 import { TasksController } from './tasks/tasks.controller';
 import { MongoService } from './database/mongo.service';
@@ -11,6 +12,7 @@ import { ITasksService } from './tasks/tasks.service.interface';
 import { TasksService } from './tasks/tasks.service';
 import { ITasksRepository } from './tasks/tasks.repository.interface';
 import { TasksRepository } from './tasks/tasks.repository';
+import { IExceptionFilter } from './errors/exception.filter.interface';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -20,6 +22,7 @@ export interface IBootstrapReturn {
 const containerBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<App>(TYPES.Application).to(App).inSingletonScope();
 	bind<ILoggerService>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
+	bind<IExceptionFilter>(TYPES.ExceptionFilter).to(ExceptionFilter).inSingletonScope();
 	bind<MongoService>(TYPES.MongoService).to(MongoService).inSingletonScope();
 	bind<ITasksController>(TYPES.TasksController).to(TasksController).inSingletonScope();
 	bind<ITasksRepository>(TYPES.TasksRepository).to(TasksRepository).inSingletonScope();
