@@ -7,6 +7,7 @@ import { HydratedDocument } from 'mongoose';
 import { TasksCreateDto } from './dto/tasks-create.dto';
 import { DeleteResult } from 'mongodb';
 import { TasksFindDto } from './dto/tasks-find.dto';
+import { TasksUpdateDto } from './dto/tasks-update.dto';
 
 @injectable()
 export class TasksRepository implements ITasksRepository {
@@ -19,6 +20,14 @@ export class TasksRepository implements ITasksRepository {
 			return TaskModel.find();
 		}
 		return TaskModel.find({ name });
+	}
+
+	async update({
+		id,
+		name,
+		description,
+	}: TasksUpdateDto): Promise<HydratedDocument<TasksUpdateDto> | null> {
+		return TaskModel.findByIdAndUpdate({ _id: id }, { name, description }, { new: true });
 	}
 
 	async deleteAll(): Promise<DeleteResult> {

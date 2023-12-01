@@ -26,6 +26,12 @@ export class TasksController extends BaseController implements ITasksController 
 				middlewares: [],
 			},
 			{
+				path: '/update/:id',
+				method: 'patch',
+				func: this.update,
+				middlewares: [],
+			},
+			{
 				path: '/getAll',
 				method: 'get',
 				func: this.getAll,
@@ -59,6 +65,22 @@ export class TasksController extends BaseController implements ITasksController 
 			return next(new HTTPError(422, 'This task has already been created'));
 		}
 		this.ok(res, { name: result.name, description: result.description });
+	}
+
+	async update({ body, params }: Request, res: Response, next: NextFunction): Promise<void> {
+		const updatedTask = await this.taskService.updateTask({
+			id: params.id,
+			name: body.name,
+			description: body.description,
+		});
+		if (!updatedTask) {
+			return next(new HTTPError(404, 'This task can not be updated'));
+		}
+		this.ok(res, {
+			id: updatedTask.id,
+			name: updatedTask.name,
+			description: updatedTask.description,
+		});
 	}
 
 	async getAll(

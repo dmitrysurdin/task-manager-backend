@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 export interface TasksUpdateDto {
-	id: Types.ObjectId;
+	id: string;
 	name: string;
 	description: string;
 }
