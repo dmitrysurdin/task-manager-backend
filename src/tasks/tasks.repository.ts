@@ -25,7 +25,7 @@ export class TasksRepository implements ITasksRepository {
 		return TaskModel.deleteMany({});
 	}
 
-	async deleteByName(name: string): Promise<DeleteResult> {
-		return TaskModel.deleteOne({ name });
+	async deleteById(id: string): Promise<DeleteResult> {
+		return TaskModel.deleteOne({ id });
 	}
 }

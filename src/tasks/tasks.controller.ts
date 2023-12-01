@@ -34,7 +34,7 @@ export class TasksController extends BaseController implements ITasksController 
 			{
 				path: '/delete/:name',
 				method: 'delete',
-				func: this.deleteByName,
+				func: this.deleteById,
 				middlewares: [],
 			},
 			{
@@ -73,8 +73,8 @@ export class TasksController extends BaseController implements ITasksController 
 		this.ok(res, tasks);
 	}
 
-	async deleteByName({ params }: Request, res: Response, next: NextFunction): Promise<void> {
-		const deletedResult = await this.taskService.deleteTaskByName({ name: params.name });
+	async deleteById({ params }: Request, res: Response, next: NextFunction): Promise<void> {
+		const deletedResult = await this.taskService.deleteTaskById({ id: params.id });
 		if (!deletedResult) {
 			return next(new HTTPError(404, 'Can not delete this task'));
 		}

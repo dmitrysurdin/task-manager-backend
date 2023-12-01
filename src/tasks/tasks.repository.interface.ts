@@ -4,10 +4,12 @@ import { HydratedDocument } from 'mongoose';
 import { TasksCreateDto } from './dto/tasks-create.dto';
 import { DeleteResult } from 'mongodb';
 import { TasksFindDto } from './dto/tasks-find.dto';
+// import { TasksUpdateDto } from './dto/tasks-update.dto';
 
 export interface ITasksRepository {
 	create: (task: Task) => Promise<HydratedDocument<TasksCreateDto>>;
 	find: (name?: string) => Promise<HydratedDocument<TasksFindDto>[] | null>;
-	deleteByName: (name: string) => Promise<DeleteResult>;
+	// update: (id: string) => Promise<HydratedDocument<TasksUpdateDto> | null>;
+	deleteById: (id: string) => Promise<DeleteResult>;
 	deleteAll: () => Promise<DeleteResult>;
 }

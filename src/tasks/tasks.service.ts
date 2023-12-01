@@ -7,7 +7,7 @@ import { ITasksRepository } from './tasks.repository.interface';
 import { Task } from './tasks.entity';
 import { HydratedDocument } from 'mongoose';
 import { TasksDeleteAllDto } from './dto/tasks-delete-all.dto';
-import { TasksDeleteByNameDto } from './dto/tasks-delete-by-name.dto';
+import { TasksDeleteByIdDto } from './dto/tasks-delete-by-id.dto';
 import { TasksFindDto } from './dto/tasks-find.dto';
 
 @injectable()
@@ -42,8 +42,8 @@ export class TasksService implements ITasksService {
 		}));
 	}
 
-	async deleteTaskByName({ name }: TasksDeleteByNameDto): Promise<{ deletedCount: number } | null> {
-		const deletedResult = await this.taskRepository.deleteByName(name);
+	async deleteTaskById({ id }: TasksDeleteByIdDto): Promise<{ deletedCount: number } | null> {
+		const deletedResult = await this.taskRepository.deleteById(id);
 
 		if (!deletedResult.acknowledged) {
 			return null;
