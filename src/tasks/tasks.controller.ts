@@ -8,6 +8,8 @@ import { NextFunction, Request, Response } from 'express';
 import { ITasksService } from './tasks.service.interface';
 import { HTTPError } from '../errors/http-error.class';
 import { TasksCreateDto } from './dto/tasks-create.dto';
+import { TasksDeleteAllDto } from './dto/tasks-delete-all.dto';
+import { TasksFindDto } from './dto/tasks-find.dto';
 
 @injectable()
 export class TasksController extends BaseController implements ITasksController {
@@ -30,15 +32,15 @@ export class TasksController extends BaseController implements ITasksController 
 				middlewares: [],
 			},
 			{
-				path: '/getById',
-				method: 'get',
-				func: this.getById,
+				path: '/delete/:name',
+				method: 'delete',
+				func: this.deleteByName,
 				middlewares: [],
 			},
 			{
-				path: '/delete',
+				path: '/deleteAll',
 				method: 'delete',
-				func: this.delete,
+				func: this.deleteAll,
 				middlewares: [],
 			},
 		]);
@@ -58,7 +60,36 @@ export class TasksController extends BaseController implements ITasksController 
 		}
 		this.ok(res, { name: result.name, description: result.description });
 	}
-	async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {}
-	async getById(req: Request, res: Response, next: NextFunction): Promise<void> {}
-	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {}
+
+	async getAll(
+		req: Request<{}, {}, TasksFindDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const tasks = await this.taskService.getAllTasks();
+		if (!tasks) {
+			return next(new HTTPError(500, 'Internal server error'));
+		}
+		this.ok(res, tasks);
+	}
+
+	async deleteByName({ params }: Request, res: Response, next: NextFunction): Promise<void> {
+		const deletedResult = await this.taskService.deleteTaskByName({ name: params.name });
+		if (!deletedResult) {
+			return next(new HTTPError(404, 'Can not delete this task'));
+		}
+		this.ok(res, { deletedCount: deletedResult.deletedCount });
+	}
+
+	async deleteAll(
+		req: Request<{}, {}, TasksDeleteAllDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const deletedResult = await this.taskService.deleteAllTasks();
+		if (!deletedResult) {
+			return next(new HTTPError(404, 'Can not delete all tasks'));
+		}
+		this.ok(res, { deleteCount: deletedResult.deletedCount });
+	}
 }
