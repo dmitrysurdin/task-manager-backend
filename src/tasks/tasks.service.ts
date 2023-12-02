@@ -49,7 +49,7 @@ export class TasksService implements ITasksService {
 
 	async deleteTaskById({ id }: TasksDeleteByIdDto): Promise<{ deletedCount: number } | null> {
 		const deletedResult = await this.taskRepository.deleteById(id);
-		if (!deletedResult.acknowledged) {
+		if (!deletedResult?.acknowledged) {
 			return null;
 		}
 		return { deletedCount: deletedResult.deletedCount };

@@ -16,10 +16,14 @@ export class TasksRepository implements ITasksRepository {
 	}
 
 	async find(name?: string): Promise<HydratedDocument<TasksFindDto>[] | null> {
-		if (!name) {
-			return TaskModel.find();
+		try {
+			if (!name) {
+				return TaskModel.find();
+			}
+			return TaskModel.find({ name });
+		} catch (error: unknown) {
+			return null;
 		}
-		return TaskModel.find({ name });
 	}
 
 	async update({
@@ -27,7 +31,14 @@ export class TasksRepository implements ITasksRepository {
 		name,
 		description,
 	}: TasksUpdateDto): Promise<HydratedDocument<TasksUpdateDto> | null> {
-		return TaskModel.findByIdAndUpdate({ _id: id }, { name, description }, { new: true });
+		try {
+			if (id.length !== 24) {
+				return null;
+			}
+			return await TaskModel.findByIdAndUpdate({ _id: id }, { name, description }, { new: true });
+		} catch (error: unknown) {
+			return null;
+		}
 	}
 
 	async deleteAll(): Promise<DeleteResult> {
