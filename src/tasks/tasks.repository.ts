@@ -11,8 +11,12 @@ import { TasksUpdateDto } from './dto/tasks-update.dto';
 
 @injectable()
 export class TasksRepository implements ITasksRepository {
-	async create({ name, description }: Task): Promise<HydratedDocument<TasksCreateDto>> {
-		return await TaskModel.create({ name, description });
+	async create({ name, description }: Task): Promise<HydratedDocument<TasksCreateDto> | null> {
+		try {
+			return await TaskModel.create({ name, description });
+		} catch (e: unknown) {
+			return null;
+		}
 	}
 
 	async find(name?: string): Promise<HydratedDocument<TasksFindDto>[] | null> {

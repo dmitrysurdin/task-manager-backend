@@ -7,7 +7,7 @@ import { TasksFindDto } from './dto/tasks-find.dto';
 import { TasksUpdateDto } from './dto/tasks-update.dto';
 
 export interface ITasksRepository {
-	create: (task: Task) => Promise<HydratedDocument<TasksCreateDto>>;
+	create: (task: Task) => Promise<HydratedDocument<TasksCreateDto> | null>;
 	find: (name?: string) => Promise<HydratedDocument<TasksFindDto>[] | null>;
 	update: (task: TasksUpdateDto) => Promise<HydratedDocument<TasksUpdateDto> | null>;
 	deleteById: (id: string) => Promise<DeleteResult>;
