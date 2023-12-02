@@ -1,2 +1,2 @@
 # Task manager backend
-Nodejs, Express
+API for task manager
