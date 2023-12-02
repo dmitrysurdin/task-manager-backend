@@ -36,7 +36,7 @@ export class TasksController extends BaseController implements ITasksController 
 				middlewares: [],
 			},
 			{
-				path: '/delete/:name',
+				path: '/delete/:id',
 				method: 'delete',
 				func: this.deleteById,
 				middlewares: [],
