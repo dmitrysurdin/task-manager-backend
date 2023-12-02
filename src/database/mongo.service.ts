@@ -5,13 +5,13 @@ import { TYPES } from '../types';
 
 @injectable()
 export class MongoService {
-	DB_URL: string;
+	DB_URI: string;
 	constructor(@inject(TYPES.LoggerService) private logger: ILoggerService) {
-		this.DB_URL = `mongodb+srv://user:user@cluster.vnptkyc.mongodb.net/?retryWrites=true&w=majority`;
+		this.DB_URI = process.env.MONGODB_URI ?? '';
 	}
 	public async connect(): Promise<void> {
 		try {
-			await mongoose.connect(this.DB_URL);
+			await mongoose.connect(this.DB_URI);
 			this.logger.log('[MongoService] Data base is successfully connected');
 		} catch (e) {
 			if (e instanceof Error) {
